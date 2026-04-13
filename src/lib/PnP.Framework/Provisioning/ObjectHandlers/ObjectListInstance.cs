@@ -2687,7 +2687,23 @@ namespace PnP.Framework.Provisioning.ObjectHandlers
 
             foreach (var ct in siteList.ContentTypes)
             {
-                web.Context.Load(ct, c => c.Parent);
+                web.Context.Load(ct, 
+                    c => c.Parent,
+                    c => c.Id,
+                    c => c.Name,
+                    c => c.Description,
+                    c => c.Group,
+                    c => c.Hidden,
+                    c => c.Sealed,
+                    c => c.ReadOnly,
+                    c => c.DocumentTemplate,
+                    c => c.SchemaXmlWithResourceTokens,
+                    c => c.DisplayFormClientSideComponentId,
+                    c => c.DisplayFormClientSideComponentProperties,
+                    c => c.NewFormClientSideComponentId,
+                    c => c.NewFormClientSideComponentProperties,
+                    c => c.EditFormClientSideComponentId,
+                    c => c.EditFormClientSideComponentProperties);
                 web.Context.Load(siteList.RootFolder, rf => rf.UniqueContentTypeOrder);
                 web.Context.ExecuteQueryRetry();
 
@@ -2695,19 +2711,14 @@ namespace PnP.Framework.Provisioning.ObjectHandlers
                     ? siteList.RootFolder.UniqueContentTypeOrder.FirstOrDefault(c => c.StringValue.Equals(ct.Id.StringValue, StringComparison.OrdinalIgnoreCase)) == null
                     : false;
 
+                // This is a site-level or inherited content type
                 if (ct.Parent != null)
                 {
-                    // Removed this - so that we are getting full list of content types and if it's oob content type,
-                    // We are taking parent - VesaJ.
-                    //if (!BuiltInContentTypeId.Contains(ct.Parent.StringId))
-                    //{
                     // Exclude System Content Type to prevent getting exception during import
                     if (!ct.Parent.StringId.Equals(BuiltInContentTypeId.System))
                     {
                         list.ContentTypeBindings.Add(new ContentTypeBinding { ContentTypeId = ct.Parent.StringId, Default = count == 0, Hidden = ctypeHidden });
                     }
-
-                    //}
                 }
                 else
                 {
@@ -2723,8 +2734,52 @@ namespace PnP.Framework.Provisioning.ObjectHandlers
                         contentTypeFields.Add(new FieldRef() { Id = fieldLink.Id });
                     }
                 }
+
+                var listContentType = new Model.ContentType
+                {
+                    Id = ct.Id.StringValue,
+                    Name = ct.Name,
+                    Description = ct.Description,
+                    Group = ct.Group,
+                    Hidden = ct.Hidden,
+                    Sealed = ct.Sealed,
+                    ReadOnly = ct.ReadOnly,
+                    DocumentTemplate = ct.DocumentTemplate,
+                    DisplayFormClientSideComponentId = ct.DisplayFormClientSideComponentId,
+                    DisplayFormClientSideComponentProperties = ct.DisplayFormClientSideComponentProperties,
+                    NewFormClientSideComponentId = ct.NewFormClientSideComponentId,
+                    NewFormClientSideComponentProperties = ct.NewFormClientSideComponentProperties,
+                    EditFormClientSideComponentId = ct.EditFormClientSideComponentId,
+                    EditFormClientSideComponentProperties = ct.EditFormClientSideComponentProperties
+                };
+
+                siteList.Context.Load(ct.FieldLinks, fls => fls.Include(
+                    fl => fl.Id,
+                    fl => fl.Name,
+                    fl => fl.Required,
+                    fl => fl.Hidden));
+                siteList.Context.ExecuteQueryRetry();
+
+                foreach (var fieldLink in ct.FieldLinks)
+                {
+                    listContentType.FieldRefs.Add(new FieldRef
+                    {
+                        Id = fieldLink.Id,
+                        Required = fieldLink.Required,
+                        Hidden = fieldLink.Hidden
+                    });
+
+                    if (!fieldLink.Hidden)
+                    {
+                        contentTypeFields.Add(new FieldRef() { Id = fieldLink.Id });
+                    }
+                }
+
+                list.ContentTypes.Add(listContentType);
+
                 count++;
             }
+            
 
             return list;
         }
@@ -2960,7 +3015,7 @@ namespace PnP.Framework.Provisioning.ObjectHandlers
                     if (field.TypeAsString.StartsWith("TaxonomyField"))
                     {
                         // find the corresponding taxonomy container text field and include it too
-                        var taxField = (TaxonomyField)field;
+                        var taxField = web.Context.CastTo<TaxonomyField>(field);
                         taxField.EnsureProperties(f => f.TextField, f => f.Id);
 
                         var noteField = siteList.Fields.GetById(taxField.TextField);

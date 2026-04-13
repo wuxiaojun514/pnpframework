@@ -3,6 +3,7 @@ using Microsoft.SharePoint.Client.Taxonomy;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PnP.Framework.Provisioning.Model;
 using PnP.Framework.Provisioning.ObjectHandlers;
+using PnP.Framework.Provisioning.Providers.Xml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -209,6 +210,30 @@ namespace PnP.Framework.Test.Framework.ObjectHandlers
                 Assert.AreEqual(termName, value[0].Label, "Term label not set correctly");
                 Assert.AreEqual(termId.ToString(), value[0].TermGuid, "Term GUID not set correctly");
 
+            }
+        }
+
+
+        [TestMethod]
+        public void CanExportListLevelContentTypes()
+        {
+            using (var ctx = TestCommon.CreateClientContext())
+            {
+                var web = ctx.Web;
+
+                // Export the template
+                var template = new ProvisioningTemplate();
+                var creationInfo = new ProvisioningTemplateCreationInformation(ctx.Web);
+                creationInfo.HandlersToProcess= Handlers.Lists;
+                creationInfo.ListsToExtract = new List<string> { listName };
+                template = new ObjectListInstance(FieldAndListProvisioningStepHelper.Step.Export).ExtractObjects(ctx.Web, template, creationInfo);
+                var xml = template.ToXML();
+
+                // Verify that the template contains the list
+                var exportedList = template.Lists.FirstOrDefault(l => l.Title == listName);
+                Assert.IsNotNull(exportedList.ContentTypes, "content types should be in the exported template");
+                Console.WriteLine("\nGenerated XML (first 2000 chars):");
+                Console.WriteLine(xml.Substring(0, Math.Min(2000, xml.Length)));
             }
         }
 
