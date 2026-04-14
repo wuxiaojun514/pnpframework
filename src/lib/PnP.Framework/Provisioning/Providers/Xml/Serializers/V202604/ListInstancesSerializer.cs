@@ -62,6 +62,9 @@ namespace PnP.Framework.Provisioning.Providers.Xml.Serializers.V202604
                 // Define custom resolver for Security
                 expressions.Add(l => l.Security, new SecurityFromSchemaToModelTypeResolver());
 
+                // Define custom resolver for ContentTypeBindings
+                expressions.Add(l => l.ContentTypeBindings, new ContentTypeBindingsFromSchemaToModelTypeResolver());
+
                 // Define custom resolver for UserCustomActions > CommandUIExtension (XML Any)
                 expressions.Add(l => l.UserCustomActions[0].CommandUIExtension, new XmlAnyFromSchemaToModelValueResolver("CommandUIExtension"));
                 expressions.Add(l => l.UserCustomActions[0].RegistrationType, new FromStringToEnumValueResolver(typeof(UserCustomActionRegistrationType)));
@@ -190,27 +193,6 @@ namespace PnP.Framework.Provisioning.Providers.Xml.Serializers.V202604
                     }
                 }));
 
-                // *** NEW: List-level Content Types Support ***
-                // This is the key addition for V202604 to support exporting list-scoped content types
-                // We use ExpressionValueResolver + PnPObjectsMapper.MapObjects pattern (same as site-level ContentTypesSerializer)
-                var contentTypeTypeName = $"{PnPSerializationScope.Current?.BaseSchemaNamespace}.ContentType, {PnPSerializationScope.Current?.BaseSchemaAssemblyName}";
-                var contentTypeType = Type.GetType(contentTypeTypeName, true);
-                resolvers.Add($"{listInstanceType}.ContentTypes", new ExpressionValueResolver<ListInstance>((s, v) =>
-                {
-                    if (s.ContentTypes != null && s.ContentTypes.Count > 0)
-                    {
-                        // Map the ContentTypes collection to schema ContentType[] array
-                        // This follows the same pattern as ContentTypesSerializer.Serialize()
-                        return PnPObjectsMapper.MapObjects(s.ContentTypes,
-                            new CollectionFromModelToSchemaTypeResolver(contentTypeType),
-                            resolvers,
-                            recursive: true);
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }));
 
                 resolvers.Add($"{listInstanceType}.DraftVersionVisibilitySpecified", new ExpressionValueResolver(() => true));
                 resolvers.Add($"{listInstanceType}.MaxVersionLimitSpecified", new ExpressionValueResolver(() => true));
@@ -240,6 +222,40 @@ namespace PnP.Framework.Provisioning.Providers.Xml.Serializers.V202604
                 var defaultColumnItemValueSelector = CreateSelectorLambda(defaultColumnItemType, "Value");
 
                 resolvers.Add($"{listInstanceType}.DefaultColumnValues", new FromDictionaryToArrayValueResolver<string, string>(defaultColumnItemType, defaultColumnItemKeySelector, defaultColumnItemValueSelector));
+
+                // ContentTypeBinding - handle Client Side Component IDs (GUID to string conversion)
+                var contentTypeBindingTypeName = $"{PnPSerializationScope.Current?.BaseSchemaNamespace}.ContentTypeBinding, {PnPSerializationScope.Current?.BaseSchemaAssemblyName}";
+                var contentTypeBindingType = Type.GetType(contentTypeBindingTypeName, true);
+
+                resolvers.Add($"{contentTypeBindingType}.DisplayFormClientSideComponentId", new ExpressionValueResolver((s, v) =>
+                {
+                    var value = s.GetPublicInstancePropertyValue("DisplayFormClientSideComponentId");
+                    if (value != null && value is Guid guid && guid != Guid.Empty)
+                    {
+                        return guid.ToString();
+                    }
+                    return null;
+                }));
+
+                resolvers.Add($"{contentTypeBindingType}.NewFormClientSideComponentId", new ExpressionValueResolver((s, v) =>
+                {
+                    var value = s.GetPublicInstancePropertyValue("NewFormClientSideComponentId");
+                    if (value != null && value is Guid guid && guid != Guid.Empty)
+                    {
+                        return guid.ToString();
+                    }
+                    return null;
+                }));
+
+                resolvers.Add($"{contentTypeBindingType}.EditFormClientSideComponentId", new ExpressionValueResolver((s, v) =>
+                {
+                    var value = s.GetPublicInstancePropertyValue("EditFormClientSideComponentId");
+                    if (value != null && value is Guid guid && guid != Guid.Empty)
+                    {
+                        return guid.ToString();
+                    }
+                    return null;
+                }));
 
                 // Manage empty TemplateFeatureID
                 resolvers.Add($"{listInstanceType}.TemplateFeatureID", new ExpressionValueResolver((s, v) =>

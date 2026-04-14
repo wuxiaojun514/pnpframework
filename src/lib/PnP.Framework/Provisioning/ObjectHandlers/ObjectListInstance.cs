@@ -1694,6 +1694,8 @@ namespace PnP.Framework.Provisioning.ObjectHandlers
                                 contentTypesToShowInNewButton.Add(listContentType);
                             }
                         }
+
+                        ApplyContentTypeBindingSettings(web, list, listContentType, ctb, scope, parser);
                     }
                 }
             }
@@ -1724,6 +1726,113 @@ namespace PnP.Framework.Provisioning.ObjectHandlers
                 defaultContentType.EnsureProperty(ct => ct.Id);
                 list.SetDefaultContentType(defaultContentType.Id);
             }
+        }
+
+        private static void ApplyContentTypeBindingSettings(Web web, List list, ContentType listContentType, Model.ContentTypeBinding contentTypeBinding, PnPMonitoredScope scope, TokenParser parser)
+        {
+            bool isDirty = false;
+
+            web.Context.Load(listContentType,
+                ct => ct.DocumentTemplate,
+                ct => ct.DisplayFormUrl,
+                ct => ct.EditFormUrl,
+                ct => ct.NewFormUrl,
+                ct => ct.DisplayFormClientSideComponentId,
+                ct => ct.DisplayFormClientSideComponentProperties,
+                ct => ct.NewFormClientSideComponentId,
+                ct => ct.NewFormClientSideComponentProperties,
+                ct => ct.EditFormClientSideComponentId,
+                ct => ct.EditFormClientSideComponentProperties,
+                ct => ct.FieldLinks.Include(fl => fl.Id, fl => fl.Hidden, fl => fl.Required));
+            web.Context.ExecuteQueryRetry();
+
+            if (contentTypeBinding.FieldRefs.Any())
+            {
+                foreach (var fieldRef in contentTypeBinding.FieldRefs)
+                {
+                    var fieldLink = listContentType.FieldLinks.FirstOrDefault(fl => fl.Id == fieldRef.Id);
+                    if (fieldLink != null)
+                    {
+                        if (fieldLink.Required != fieldRef.Required)
+                        {
+                            fieldLink.Required = fieldRef.Required;
+                            isDirty = true;
+                        }
+                        if (fieldLink.Hidden != fieldRef.Hidden)
+                        {
+                            fieldLink.Hidden = fieldRef.Hidden;
+                            isDirty = true;
+                        }
+                    }
+                }
+            }
+
+            if (!string.IsNullOrEmpty(contentTypeBinding.DocumentTemplate))
+            {
+                var parsedDocumentTemplate = parser.ParseString(contentTypeBinding.DocumentTemplate);
+                if (!string.IsNullOrEmpty(parsedDocumentTemplate) && !string.Equals(listContentType.DocumentTemplate, parsedDocumentTemplate, StringComparison.OrdinalIgnoreCase))
+                {
+                    listContentType.DocumentTemplate = parsedDocumentTemplate;
+                    isDirty = true;
+                }
+            }
+
+            isDirty |= SetContentTypeBindingFormCustomizerSettings(contentTypeBinding, parser, listContentType);
+
+            if (isDirty)
+            {
+                listContentType.Update(true);
+                web.Context.ExecuteQueryRetry();
+            }
+        }
+
+        private static bool SetContentTypeBindingFormCustomizerSettings(Model.ContentTypeBinding contentTypeBinding, TokenParser parser, ContentType listContentType)
+        {
+            bool isDirty = false;
+
+            var parsedDisplayFormClientSideComponentId = parser.ParseString(contentTypeBinding.DisplayFormClientSideComponentId);
+            if (!string.IsNullOrEmpty(parsedDisplayFormClientSideComponentId) && !string.Equals(listContentType.DisplayFormClientSideComponentId, parsedDisplayFormClientSideComponentId, StringComparison.OrdinalIgnoreCase))
+            {
+                listContentType.DisplayFormClientSideComponentId = parsedDisplayFormClientSideComponentId;
+                isDirty = true;
+            }
+
+            var parsedDisplayFormClientSideComponentProperties = parser.ParseString(contentTypeBinding.DisplayFormClientSideComponentProperties);
+            if (!string.IsNullOrEmpty(parsedDisplayFormClientSideComponentProperties) && !string.Equals(listContentType.DisplayFormClientSideComponentProperties, parsedDisplayFormClientSideComponentProperties, StringComparison.Ordinal))
+            {
+                listContentType.DisplayFormClientSideComponentProperties = parsedDisplayFormClientSideComponentProperties;
+                isDirty = true;
+            }
+
+            var parsedNewFormClientSideComponentId = parser.ParseString(contentTypeBinding.NewFormClientSideComponentId);
+            if (!string.IsNullOrEmpty(parsedNewFormClientSideComponentId) && !string.Equals(listContentType.NewFormClientSideComponentId, parsedNewFormClientSideComponentId, StringComparison.OrdinalIgnoreCase))
+            {
+                listContentType.NewFormClientSideComponentId = parsedNewFormClientSideComponentId;
+                isDirty = true;
+            }
+
+            var parsedNewFormClientSideComponentProperties = parser.ParseString(contentTypeBinding.NewFormClientSideComponentProperties);
+            if (!string.IsNullOrEmpty(parsedNewFormClientSideComponentProperties) && !string.Equals(listContentType.NewFormClientSideComponentProperties, parsedNewFormClientSideComponentProperties, StringComparison.Ordinal))
+            {
+                listContentType.NewFormClientSideComponentProperties = parsedNewFormClientSideComponentProperties;
+                isDirty = true;
+            }
+
+            var parsedEditFormClientSideComponentId = parser.ParseString(contentTypeBinding.EditFormClientSideComponentId);
+            if (!string.IsNullOrEmpty(parsedEditFormClientSideComponentId) && !string.Equals(listContentType.EditFormClientSideComponentId, parsedEditFormClientSideComponentId, StringComparison.OrdinalIgnoreCase))
+            {
+                listContentType.EditFormClientSideComponentId = parsedEditFormClientSideComponentId;
+                isDirty = true;
+            }
+
+            var parsedEditFormClientSideComponentProperties = parser.ParseString(contentTypeBinding.EditFormClientSideComponentProperties);
+            if (!string.IsNullOrEmpty(parsedEditFormClientSideComponentProperties) && !string.Equals(listContentType.EditFormClientSideComponentProperties, parsedEditFormClientSideComponentProperties, StringComparison.Ordinal))
+            {
+                listContentType.EditFormClientSideComponentProperties = parsedEditFormClientSideComponentProperties;
+                isDirty = true;
+            }
+
+            return isDirty;
         }
 
         private static void CreateListCustomAction(List existingList, TokenParser parser, CustomAction userCustomAction)
@@ -2013,7 +2122,7 @@ namespace PnP.Framework.Provisioning.ObjectHandlers
 
             if (createdList.BaseTemplate != (int)ListTemplateType.Survey)
             {
-                ConfigureContentTypes(web, createdList, templateList, true, scope, parser);
+                    ConfigureContentTypes(web, createdList, templateList, true, scope, parser);
             }
 
             // Add any custom action
@@ -2711,18 +2820,29 @@ namespace PnP.Framework.Provisioning.ObjectHandlers
                     ? siteList.RootFolder.UniqueContentTypeOrder.FirstOrDefault(c => c.StringValue.Equals(ct.Id.StringValue, StringComparison.OrdinalIgnoreCase)) == null
                     : false;
 
+                var listContentType = new Model.ContentTypeBinding
+                {
+                    ContentTypeId = ct.StringId,
+                    Default = count == 0,
+                    Hidden = ctypeHidden,
+                    DocumentTemplate = ct.DocumentTemplate,
+                    DisplayFormClientSideComponentId = ct.DisplayFormClientSideComponentId,
+                    DisplayFormClientSideComponentProperties = ct.DisplayFormClientSideComponentProperties,
+                    NewFormClientSideComponentId = ct.NewFormClientSideComponentId,
+                    NewFormClientSideComponentProperties = ct.NewFormClientSideComponentProperties,
+                    EditFormClientSideComponentId = ct.EditFormClientSideComponentId,
+                    EditFormClientSideComponentProperties = ct.EditFormClientSideComponentProperties,
+                };
+
                 // This is a site-level or inherited content type
                 if (ct.Parent != null)
                 {
                     // Exclude System Content Type to prevent getting exception during import
                     if (!ct.Parent.StringId.Equals(BuiltInContentTypeId.System))
                     {
-                        list.ContentTypeBindings.Add(new ContentTypeBinding { ContentTypeId = ct.Parent.StringId, Default = count == 0, Hidden = ctypeHidden });
+                        listContentType.ContentTypeId = ct.Parent.StringId;
+                           
                     }
-                }
-                else
-                {
-                    list.ContentTypeBindings.Add(new ContentTypeBinding { ContentTypeId = ct.StringId, Default = count == 0, Hidden = ctypeHidden });
                 }
 
                 web.Context.Load(ct.FieldLinks);
@@ -2735,23 +2855,6 @@ namespace PnP.Framework.Provisioning.ObjectHandlers
                     }
                 }
 
-                var listContentType = new Model.ContentType
-                {
-                    Id = ct.Id.StringValue,
-                    Name = ct.Name,
-                    Description = ct.Description,
-                    Group = ct.Group,
-                    Hidden = ct.Hidden,
-                    Sealed = ct.Sealed,
-                    ReadOnly = ct.ReadOnly,
-                    DocumentTemplate = ct.DocumentTemplate,
-                    DisplayFormClientSideComponentId = ct.DisplayFormClientSideComponentId,
-                    DisplayFormClientSideComponentProperties = ct.DisplayFormClientSideComponentProperties,
-                    NewFormClientSideComponentId = ct.NewFormClientSideComponentId,
-                    NewFormClientSideComponentProperties = ct.NewFormClientSideComponentProperties,
-                    EditFormClientSideComponentId = ct.EditFormClientSideComponentId,
-                    EditFormClientSideComponentProperties = ct.EditFormClientSideComponentProperties
-                };
 
                 siteList.Context.Load(ct.FieldLinks, fls => fls.Include(
                     fl => fl.Id,
@@ -2775,7 +2878,7 @@ namespace PnP.Framework.Provisioning.ObjectHandlers
                     }
                 }
 
-                list.ContentTypes.Add(listContentType);
+                list.ContentTypeBindings.Add(listContentType);
 
                 count++;
             }

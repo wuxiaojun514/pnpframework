@@ -225,13 +225,14 @@ namespace PnP.Framework.Test.Framework.ObjectHandlers
                 var template = new ProvisioningTemplate();
                 var creationInfo = new ProvisioningTemplateCreationInformation(ctx.Web);
                 creationInfo.HandlersToProcess= Handlers.Lists;
+                listName = "Project";
                 creationInfo.ListsToExtract = new List<string> { listName };
                 template = new ObjectListInstance(FieldAndListProvisioningStepHelper.Step.Export).ExtractObjects(ctx.Web, template, creationInfo);
                 var xml = template.ToXML();
 
                 // Verify that the template contains the list
                 var exportedList = template.Lists.FirstOrDefault(l => l.Title == listName);
-                Assert.IsNotNull(exportedList.ContentTypes, "content types should be in the exported template");
+                Assert.IsNotNull(exportedList.ContentTypeBindings, "content types should be in the exported template");
                 Console.WriteLine("\nGenerated XML (first 2000 chars):");
                 Console.WriteLine(xml.Substring(0, Math.Min(2000, xml.Length)));
             }

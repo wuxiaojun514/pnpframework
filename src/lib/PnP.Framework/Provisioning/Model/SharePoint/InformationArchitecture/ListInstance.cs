@@ -17,7 +17,6 @@ namespace PnP.Framework.Provisioning.Model
         public ListInstance()
         {
             this._ctBindings = new ContentTypeBindingCollection(this.ParentTemplate);
-            this._cts = new ContentTypeCollection(this.ParentTemplate);
             this._views = new ViewCollection(this.ParentTemplate);
             this._fields = new FieldCollection(this.ParentTemplate);
             this._fieldRefs = new FieldRefCollection(this.ParentTemplate);
@@ -38,7 +37,7 @@ namespace PnP.Framework.Provisioning.Model
         /// <param name="dataRows">DataRows of the list</param>
         public ListInstance(IEnumerable<ContentTypeBinding> contentTypeBindings,
             IEnumerable<View> views, IEnumerable<Field> fields, IEnumerable<FieldRef> fieldRefs, List<DataRow> dataRows) :
-                this(contentTypeBindings, null, views, fields, fieldRefs, dataRows, null, null, null)
+                this(contentTypeBindings, views, fields, fieldRefs, dataRows, null, null, null)
         {
         }
 
@@ -46,16 +45,15 @@ namespace PnP.Framework.Provisioning.Model
         /// Constructor for ListInstance class
         /// </summary>
         /// <param name="contentTypeBindings">ContentType Bindings of the list</param>
-        /// <param name="contentTypes">ContentType of the list</param>
         /// <param name="views">View of the list</param>
         /// <param name="fields">Fields of the list</param>
         /// <param name="fieldRefs">FieldRefs of the list</param>
         /// <param name="dataRows">DataRows of the list</param>
         /// <param name="fieldDefaults">FieldDefaults of the list</param>
         /// <param name="security">Security Rules of the list</param>
-        public ListInstance(IEnumerable<ContentTypeBinding> contentTypeBindings, IEnumerable<ContentType> contentTypes,
+        public ListInstance(IEnumerable<ContentTypeBinding> contentTypeBindings,
             IEnumerable<View> views, IEnumerable<Field> fields, IEnumerable<FieldRef> fieldRefs, List<DataRow> dataRows, Dictionary<String, String> fieldDefaults, ObjectSecurity security) :
-                this(contentTypeBindings, contentTypes, views, fields, fieldRefs, dataRows, fieldDefaults, security, null)
+                this(contentTypeBindings, views, fields, fieldRefs, dataRows, fieldDefaults, security, null)
         {
         }
 
@@ -63,7 +61,6 @@ namespace PnP.Framework.Provisioning.Model
         /// Constructor for ListInstance class
         /// </summary>
         /// <param name="contentTypeBindings">ContentTypeBindings  of the list</param>
-        /// <param name="contentTypes">ContentType  of the list</param>
         /// <param name="views">Views of the list</param>
         /// <param name="fields">Fields of the list</param>
         /// <param name="fieldRefs">FieldRefs of the list</param>
@@ -71,9 +68,9 @@ namespace PnP.Framework.Provisioning.Model
         /// <param name="fieldDefaults">FieldDefaults of the list</param>
         /// <param name="security">Security Rules of the list</param>
         /// <param name="folders">List Folders</param>
-        public ListInstance(IEnumerable<ContentTypeBinding> contentTypeBindings, IEnumerable<ContentType> contentTypes,
+        public ListInstance(IEnumerable<ContentTypeBinding> contentTypeBindings,
             IEnumerable<View> views, IEnumerable<Field> fields, IEnumerable<FieldRef> fieldRefs, List<DataRow> dataRows, Dictionary<String, String> fieldDefaults, ObjectSecurity security, List<Folder> folders) :
-                this(contentTypeBindings, contentTypes, views, fields, fieldRefs, dataRows, fieldDefaults, security, folders, null)
+                this(contentTypeBindings, views, fields, fieldRefs, dataRows, fieldDefaults, security, folders, null)
         {
         }
 
@@ -91,29 +88,9 @@ namespace PnP.Framework.Provisioning.Model
         /// <param name="userCustomActions">UserCustomActions of the list</param>
         public ListInstance(IEnumerable<ContentTypeBinding> contentTypeBindings,
             IEnumerable<View> views, IEnumerable<Field> fields, IEnumerable<FieldRef> fieldRefs, List<DataRow> dataRows, Dictionary<String, String> fieldDefaults, ObjectSecurity security, List<Folder> folders, List<CustomAction> userCustomActions) :
-            this(contentTypeBindings, null, views, fields, fieldRefs, dataRows, fieldDefaults, security, folders, userCustomActions)
-        {
-        }
-
-        /// <summary>
-        /// Constructor for the ListInstance class
-        /// </summary>
-        /// <param name="contentTypeBindings">ContentTypeBindings of the list</param>
-        /// <param name="contentTypes">ContentTypes of the list</param>
-        /// <param name="views">Views of the list</param>
-        /// <param name="fields">Fields of the list</param>
-        /// <param name="fieldRefs">FieldRefs of the list</param>
-        /// <param name="dataRows">DataRows of the list</param>
-        /// <param name="fieldDefaults">FieldDefaults of the list</param>
-        /// <param name="security">Security Rules of the list</param>
-        /// <param name="folders">List Folders</param>
-        /// <param name="userCustomActions">UserCustomActions of the list</param>
-        public ListInstance(IEnumerable<ContentTypeBinding> contentTypeBindings, IEnumerable<ContentType> contentTypes,
-            IEnumerable<View> views, IEnumerable<Field> fields, IEnumerable<FieldRef> fieldRefs, List<DataRow> dataRows, Dictionary<String, String> fieldDefaults, ObjectSecurity security, List<Folder> folders, List<CustomAction> userCustomActions) :
             this()
         {
             this.ContentTypeBindings.AddRange(contentTypeBindings);
-            this.ContentTypes.AddRange(contentTypes);
             this.Views.AddRange(views);
             this.Fields.AddRange(fields);
             this.FieldRefs.AddRange(fieldRefs);
@@ -134,7 +111,6 @@ namespace PnP.Framework.Provisioning.Model
 
         #region Private Members
         private ContentTypeBindingCollection _ctBindings;
-        private ContentTypeCollection _cts;
         private ViewCollection _views;
         private FieldCollection _fields;
         private FieldRefCollection _fieldRefs;
@@ -229,7 +205,6 @@ namespace PnP.Framework.Provisioning.Model
         /// </summary>
         public bool ContentTypesEnabled { get; set; }
 
-
         /// <summary>
         /// Gets or sets whether to hide the list
         /// </summary>
@@ -264,15 +239,6 @@ namespace PnP.Framework.Provisioning.Model
         {
             get { return this._ctBindings; }
             private set { this._ctBindings = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the content types defined on the list
-        /// </summary>
-        public ContentTypeCollection ContentTypes
-        {
-            get { return this._cts; }
-            private set { this._cts = value; }
         }
 
         /// <summary>
@@ -510,7 +476,7 @@ namespace PnP.Framework.Provisioning.Model
         /// <returns>Returns HashCode</returns>
         public override int GetHashCode()
         {
-            return (String.Format("{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|{12}|{13}|{14}|{15}|{16}|{17}|{18}|{19}|{20}|{21}|{22}|{23}|{24}|{25}|{26}|{27}|{28}|{29}|{30}|{31}|{32}|{33}|{34}|{35}|{36}|{37}|{38}|{39}|{40}|{41}|{42}|{43}|{44}|{45}|{46}|{47}|{48}|{49}|",
+            return (String.Format("{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|{12}|{13}|{14}|{15}|{16}|{17}|{18}|{19}|{20}|{21}|{22}|{23}|{24}|{25}|{26}|{27}|{28}|{29}|{30}|{31}|{32}|{33}|{34}|{35}|{36}|{37}|{38}|{39}|{40}|{41}|{42}|{43}|{44}|{45}|{46}|{47}|{48}|",
                 this.ContentTypesEnabled.GetHashCode(),
                 (this.Description != null ? this.Description.GetHashCode() : 0),
                 (this.DocumentTemplate != null ? this.DocumentTemplate.GetHashCode() : 0),
@@ -559,8 +525,7 @@ namespace PnP.Framework.Provisioning.Model
                 this.TemplateInternalName?.GetHashCode() ?? 0,
                 this.DefaultColumnValues.Aggregate(0, (acc, next) => acc += next.GetHashCode()),
                 this.EnableAudienceTargeting.GetHashCode(),
-                this.EnableClassicAudienceTargeting.GetHashCode(),
-                this.ContentTypes.Aggregate(0, (acc, next) => acc += (next != null ? next.GetHashCode() : 0))
+                this.EnableClassicAudienceTargeting.GetHashCode()
             ).GetHashCode());
         }
 
@@ -581,7 +546,7 @@ namespace PnP.Framework.Provisioning.Model
         /// <summary>
         /// Compares ListInstance object based on ContentTypesEnabled, Description, DocumentTemplate, EnableVersioning, EnableMinorVersions, EnableModeration, Hidden, 
         /// MaxVersionLimit, MinorVersionLimit, OnQuickLaunch, EnableAttachments, EnableFolderCreation, ForceCheckOut, RemoveExistingContentTypes, TemplateType,
-        /// Title, Url, TemplateFeatureID, RemoveExistingViews, ContentTypeBindings, ContentTypes, View, Fields, FieldRefs, FieldDefaults, Security, Folders, UserCustomActions, 
+        /// Title, Url, TemplateFeatureID, RemoveExistingViews, ContentTypeBindings, View, Fields, FieldRefs, FieldDefaults, Security, Folders, UserCustomActions, 
         /// Webhooks, IRMSettings, DefaultDisplayFormUrl, DefaultEditFormUrl, DefaultNewFormUrl, Direction, ImageUrl, IrmExpire, IrmReject, IsApplicationList,
         /// ReadSecurity, ValidationFormula, ValidationMessage, DataSource, WriteSecurity, TemplateInternalName, and DefaultColumnValues properties.
         /// </summary>
@@ -614,7 +579,6 @@ namespace PnP.Framework.Provisioning.Model
                 this.TemplateFeatureID == other.TemplateFeatureID &&
                 this.RemoveExistingViews == other.RemoveExistingViews &&
                 this.ContentTypeBindings.DeepEquals(other.ContentTypeBindings) &&
-                this.ContentTypes.DeepEquals(other.ContentTypes) &&
                 // Only do a deep view compare on non system lists to avoid subtle changes in OOB view XML to popup system lists in the generated model
                 (this.IsApplicationList == false ? this.Views.DeepEquals(other.Views) : true) &&
                 // Only do a deep field compare on non system lists to avoid subtle changes in OOB field XML to popup system lists in the generated model
