@@ -229,32 +229,20 @@ namespace PnP.Framework.Provisioning.Providers.Xml.Serializers.V202604
 
                 resolvers.Add($"{contentTypeBindingType}.DisplayFormClientSideComponentId", new ExpressionValueResolver((s, v) =>
                 {
-                    var value = s.GetPublicInstancePropertyValue("DisplayFormClientSideComponentId");
-                    if (value != null && value is Guid guid && guid != Guid.Empty)
-                    {
-                        return guid.ToString();
-                    }
-                    return null;
+                    var value = s.GetPublicInstancePropertyValue("DisplayFormClientSideComponentId")?.ToString();
+                    return string.IsNullOrWhiteSpace(value) ? null : value;
                 }));
 
                 resolvers.Add($"{contentTypeBindingType}.NewFormClientSideComponentId", new ExpressionValueResolver((s, v) =>
                 {
-                    var value = s.GetPublicInstancePropertyValue("NewFormClientSideComponentId");
-                    if (value != null && value is Guid guid && guid != Guid.Empty)
-                    {
-                        return guid.ToString();
-                    }
-                    return null;
+                    var value = s.GetPublicInstancePropertyValue("NewFormClientSideComponentId")?.ToString();
+                    return string.IsNullOrWhiteSpace(value) ? null : value;
                 }));
 
                 resolvers.Add($"{contentTypeBindingType}.EditFormClientSideComponentId", new ExpressionValueResolver((s, v) =>
                 {
-                    var value = s.GetPublicInstancePropertyValue("EditFormClientSideComponentId");
-                    if (value != null && value is Guid guid && guid != Guid.Empty)
-                    {
-                        return guid.ToString();
-                    }
-                    return null;
+                    var value = s.GetPublicInstancePropertyValue("EditFormClientSideComponentId")?.ToString();
+                    return string.IsNullOrWhiteSpace(value) ? null : value;
                 }));
 
                 // Manage empty TemplateFeatureID

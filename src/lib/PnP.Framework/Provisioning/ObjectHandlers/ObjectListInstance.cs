@@ -167,6 +167,17 @@ namespace PnP.Framework.Provisioning.ObjectHandlers
 
                     #endregion Fields
 
+                    //wait for all the list fields has been created before we start to apply list content type field references.
+                    if (step == FieldAndListProvisioningStepHelper.Step.LookupFields)
+                    {
+                        foreach (var listInfo in processedLists)
+                        {
+                            ApplyListContentTypeBindingSettings(web, listInfo, scope, listInfo.TokenParser ?? parser);
+                        }
+                    }
+
+                    
+
                     #region Audience Targeting
                     foreach (var listInfo in processedLists)
                     {
@@ -1694,8 +1705,6 @@ namespace PnP.Framework.Provisioning.ObjectHandlers
                                 contentTypesToShowInNewButton.Add(listContentType);
                             }
                         }
-
-                        ApplyContentTypeBindingSettings(web, list, listContentType, ctb, scope, parser);
                     }
                 }
             }
@@ -1728,6 +1737,28 @@ namespace PnP.Framework.Provisioning.ObjectHandlers
             }
         }
 
+        private static void ApplyListContentTypeBindingSettings(Web web, ListInfo listInfo, PnPMonitoredScope scope, TokenParser parser)
+        {
+            if (!listInfo.SiteList.ContentTypesEnabled || !listInfo.TemplateList.ContentTypeBindings.Any())
+            {
+                return;
+            }
+
+            listInfo.SiteList.EnsureProperties(l => l.ContentTypes.Include(ct => ct.Id, ct => ct.StringId));
+
+            foreach (var contentTypeBinding in listInfo.TemplateList.ContentTypeBindings.Where(ctb => !ctb.Remove))
+            {
+                var matchingContentTypeId = listInfo.SiteList.ContentTypes.BestMatch(contentTypeBinding.ContentTypeId);
+                if (matchingContentTypeId == null)
+                {
+                    continue;
+                }
+
+                var listContentType = listInfo.SiteList.ContentTypes.GetById(matchingContentTypeId.StringValue);
+                ApplyContentTypeBindingSettings(web, listInfo.SiteList, listContentType, contentTypeBinding, scope, parser);
+            }
+        }
+
         private static void ApplyContentTypeBindingSettings(Web web, List list, ContentType listContentType, Model.ContentTypeBinding contentTypeBinding, PnPMonitoredScope scope, TokenParser parser)
         {
             bool isDirty = false;
@@ -1743,27 +1774,23 @@ namespace PnP.Framework.Provisioning.ObjectHandlers
                 ct => ct.NewFormClientSideComponentProperties,
                 ct => ct.EditFormClientSideComponentId,
                 ct => ct.EditFormClientSideComponentProperties,
-                ct => ct.FieldLinks.Include(fl => fl.Id, fl => fl.Hidden, fl => fl.Required));
+                ct => ct.FieldLinks.Include(fl => fl.Id, fl => fl.Hidden, fl => fl.Required
+                    ));
             web.Context.ExecuteQueryRetry();
 
             if (contentTypeBinding.FieldRefs.Any())
             {
                 foreach (var fieldRef in contentTypeBinding.FieldRefs)
                 {
-                    var fieldLink = listContentType.FieldLinks.FirstOrDefault(fl => fl.Id == fieldRef.Id);
-                    if (fieldLink != null)
+                    var field = list.GetFieldById(fieldRef.Id) ?? web.GetFieldById(fieldRef.Id, true);
+                    if (field == null)
                     {
-                        if (fieldLink.Required != fieldRef.Required)
-                        {
-                            fieldLink.Required = fieldRef.Required;
-                            isDirty = true;
-                        }
-                        if (fieldLink.Hidden != fieldRef.Hidden)
-                        {
-                            fieldLink.Hidden = fieldRef.Hidden;
-                            isDirty = true;
-                        }
+                        scope.LogWarning("Field reference {0} could not be added to list content type {1} because the field was not found.", fieldRef.Id, listContentType.StringId);
+                        continue;
                     }
+
+                    web.AddFieldToContentType(listContentType, field, fieldRef.Required, fieldRef.Hidden, false, null, null);
+
                 }
             }
 
@@ -1781,7 +1808,7 @@ namespace PnP.Framework.Provisioning.ObjectHandlers
 
             if (isDirty)
             {
-                listContentType.Update(true);
+                listContentType.Update(false);
                 web.Context.ExecuteQueryRetry();
             }
         }
