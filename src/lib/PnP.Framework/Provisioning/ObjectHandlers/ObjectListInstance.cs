@@ -1774,12 +1774,15 @@ namespace PnP.Framework.Provisioning.ObjectHandlers
                 ct => ct.NewFormClientSideComponentProperties,
                 ct => ct.EditFormClientSideComponentId,
                 ct => ct.EditFormClientSideComponentProperties,
-                ct => ct.FieldLinks.Include(fl => fl.Id, fl => fl.Hidden, fl => fl.Required
+                ct => ct.FieldLinks.Include(fl => fl.Id, fl => fl.Name, fl => fl.Hidden, fl => fl.Required
                     ));
             web.Context.ExecuteQueryRetry();
 
             if (contentTypeBinding.FieldRefs.Any())
             {
+                var orderedFieldNames = new List<string>();
+                var orderedFieldNamesSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
                 foreach (var fieldRef in contentTypeBinding.FieldRefs)
                 {
                     var field = list.GetFieldById(fieldRef.Id) ?? web.GetFieldById(fieldRef.Id, true);
@@ -1789,9 +1792,51 @@ namespace PnP.Framework.Provisioning.ObjectHandlers
                         continue;
                     }
 
+                    field.EnsureProperties(f => f.InternalName);
                     web.AddFieldToContentType(listContentType, field, fieldRef.Required, fieldRef.Hidden, false, null, null);
 
+                    if (!string.IsNullOrEmpty(field.InternalName) && orderedFieldNamesSet.Add(field.InternalName))
+                    {
+                        orderedFieldNames.Add(field.InternalName);
+                    }
+
                 }
+
+                web.Context.Load(listContentType, ct => ct.FieldLinks.Include(fl => fl.Id, fl => fl.Name, fl => fl.Hidden, fl => fl.Required));
+                web.Context.ExecuteQueryRetry();
+
+                foreach (var fieldLink in listContentType.FieldLinks)
+                {
+                    if (!string.IsNullOrEmpty(fieldLink.Name) && orderedFieldNamesSet.Add(fieldLink.Name))
+                    {
+                        orderedFieldNames.Add(fieldLink.Name);
+                    }
+                }
+
+                var currentFieldOrder = listContentType.FieldLinks
+                    .Select(fl => fl.Name)
+                    .Where(n => !string.IsNullOrEmpty(n))
+                    .ToList();
+
+                var orderChanged = currentFieldOrder.Count != orderedFieldNames.Count;
+                if (!orderChanged)
+                {
+                    for (int i = 0; i < currentFieldOrder.Count; i++)
+                    {
+                        if (!currentFieldOrder[i].Equals(orderedFieldNames[i], StringComparison.OrdinalIgnoreCase))
+                        {
+                            orderChanged = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (orderChanged && orderedFieldNames.Count > 0)
+                {
+                    listContentType.FieldLinks.Reorder(orderedFieldNames.ToArray());
+                    isDirty = true;
+                }
+
             }
 
             if (!string.IsNullOrEmpty(contentTypeBinding.DocumentTemplate))
