@@ -3661,6 +3661,106 @@ namespace PnP.Framework.Test.Framework.Providers
 
         [TestMethod]
         [TestCategory(TEST_CATEGORY)]
+        public void XMLSerializer_Deserialize_ListInstances_ContentTypeBindingClientSideComponentProperties_2604NewAdded()
+        {
+            var provider = new XMLFileSystemTemplateProvider($@"{AppDomain.CurrentDomain.BaseDirectory}\..\..\..\Resources", "Templates");
+
+            var samplePath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Resources\Templates", TEST_TEMPLATE));
+            var xml = XDocument.Load(samplePath);
+            XNamespace ns = "http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema";
+
+            var binding = xml.Descendants(ns + "ListInstance")
+                .Where(l => (string)l.Attribute("Title") == "{parameter:CompanyName} - Projects")
+                .Descendants(ns + "ContentTypeBinding")
+                .FirstOrDefault(c => (string)c.Attribute("ContentTypeID") == "0x01005D4F34E4BE7F4B6892AEBE088EDD215E");
+
+            Assert.IsNotNull(binding);
+
+            binding.SetAttributeValue("DisplayFormClientSideComponentId", "49b0ccdd-1bdf-47ba-a92f-dfddec265d63");
+            binding.SetAttributeValue("DisplayFormClientSideComponentProperties", "{'sampleProperty':'Display form value'}");
+            binding.SetAttributeValue("NewFormClientSideComponentId", "7c7c9c44-4dd4-4a2b-8619-beba16e08efa");
+            binding.SetAttributeValue("NewFormClientSideComponentProperties", "{'sampleProperty':'New form value'}");
+            binding.SetAttributeValue("EditFormClientSideComponentId", "3c4825e4-4b20-496d-9450-cd76f5135323");
+            binding.SetAttributeValue("EditFormClientSideComponentProperties", "{'sampleProperty':'Edit form value'}");
+
+            using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(xml.ToString()));
+            var serializer = new TargetSerializer();
+            var template = provider.GetTemplate(stream, serializer);
+
+            var list = template.Lists.FirstOrDefault(ls => ls.Title == "{parameter:CompanyName} - Projects");
+            Assert.IsNotNull(list);
+
+            var ct = list.ContentTypeBindings.FirstOrDefault(c => c.ContentTypeId == "0x01005D4F34E4BE7F4B6892AEBE088EDD215E");
+            Assert.IsNotNull(ct);
+            Assert.AreEqual("49b0ccdd-1bdf-47ba-a92f-dfddec265d63", ct.DisplayFormClientSideComponentId);
+            Assert.AreEqual("{'sampleProperty':'Display form value'}", ct.DisplayFormClientSideComponentProperties);
+            Assert.AreEqual("7c7c9c44-4dd4-4a2b-8619-beba16e08efa", ct.NewFormClientSideComponentId);
+            Assert.AreEqual("{'sampleProperty':'New form value'}", ct.NewFormClientSideComponentProperties);
+            Assert.AreEqual("3c4825e4-4b20-496d-9450-cd76f5135323", ct.EditFormClientSideComponentId);
+            Assert.AreEqual("{'sampleProperty':'Edit form value'}", ct.EditFormClientSideComponentProperties);
+        }
+
+        [TestMethod]
+        [TestCategory(TEST_CATEGORY)]
+        public void XMLSerializer_Deserialize_ListInstances_ContentTypeBindingFieldRefs_2604NewAdded()
+        {
+            var provider = new XMLFileSystemTemplateProvider($@"{AppDomain.CurrentDomain.BaseDirectory}\..\..\..\Resources", "Templates");
+
+            var samplePath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Resources\Templates", TEST_TEMPLATE));
+            var xml = XDocument.Load(samplePath);
+            XNamespace ns = "http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema";
+
+            var binding = xml.Descendants(ns + "ListInstance")
+                .Where(l => (string)l.Attribute("Title") == "{parameter:CompanyName} - Projects")
+                .Descendants(ns + "ContentTypeBinding")
+                .FirstOrDefault(c => (string)c.Attribute("ContentTypeID") == "0x01005D4F34E4BE7F4B6892AEBE088EDD215E");
+
+            Assert.IsNotNull(binding);
+
+            binding.Add(
+                new XElement(ns + "FieldRefs",
+                    new XElement(ns + "FieldRef",
+                        new XAttribute("ID", "{23203E97-3BFE-40CB-AFB4-07AA2B86BF45}"),
+                        new XAttribute("Name", "ProjectID"),
+                        new XAttribute("Required", true),
+                        new XAttribute("Hidden", false),
+                        new XAttribute("UpdateChildren", true)),
+                    new XElement(ns + "FieldRef",
+                        new XAttribute("ID", "{B01B3DBC-4630-4ED1-B5BA-321BC7841E3D}"),
+                        new XAttribute("Name", "ProjectName"),
+                        new XAttribute("Required", false),
+                        new XAttribute("Hidden", true),
+                        new XAttribute("UpdateChildren", false))));
+
+            using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(xml.ToString()));
+            var serializer = new TargetSerializer();
+            var template = provider.GetTemplate(stream, serializer);
+
+            var list = template.Lists.FirstOrDefault(ls => ls.Title == "{parameter:CompanyName} - Projects");
+            Assert.IsNotNull(list);
+
+            var ct = list.ContentTypeBindings.FirstOrDefault(c => c.ContentTypeId == "0x01005D4F34E4BE7F4B6892AEBE088EDD215E");
+            Assert.IsNotNull(ct);
+            Assert.IsNotNull(ct.FieldRefs);
+            Assert.AreEqual(2, ct.FieldRefs.Count);
+
+            var field = ct.FieldRefs.FirstOrDefault(f => f.Name == "ProjectID");
+            Assert.IsNotNull(field);
+            Assert.AreEqual(new Guid("23203E97-3BFE-40CB-AFB4-07AA2B86BF45"), field.Id);
+            Assert.IsTrue(field.Required);
+            Assert.IsFalse(field.Hidden);
+            Assert.IsTrue(field.UpdateChildren);
+
+            field = ct.FieldRefs.FirstOrDefault(f => f.Name == "ProjectName");
+            Assert.IsNotNull(field);
+            Assert.AreEqual(new Guid("B01B3DBC-4630-4ED1-B5BA-321BC7841E3D"), field.Id);
+            Assert.IsFalse(field.Required);
+            Assert.IsTrue(field.Hidden);
+            Assert.IsFalse(field.UpdateChildren);
+        }
+
+        [TestMethod]
+        [TestCategory(TEST_CATEGORY)]
         public void XMLSerializer_Serialize_ListInstances()
         {
             var provider = new XMLFileSystemTemplateProvider($@"{AppDomain.CurrentDomain.BaseDirectory}\..\..\..\Resources", "Templates");
@@ -4285,6 +4385,160 @@ namespace PnP.Framework.Test.Framework.Providers
             Assert.IsNotNull(l.Fields.Any);
             Assert.AreEqual(2, l.Fields.Any.Length);
             Assert.IsTrue(l.Fields.Any.All(x => x.OuterXml.StartsWith("<Field")));
+        }
+
+        [TestMethod]
+        [TestCategory(TEST_CATEGORY)]
+        public void XMLSerializer_Serialize_ListInstances_ContentTypeBindingClientSideComponentProperties()
+        {
+            var provider = new XMLFileSystemTemplateProvider($@"{AppDomain.CurrentDomain.BaseDirectory}\..\..\..\Resources", "Templates");
+
+            var result = new ProvisioningTemplate();
+            var list = new PnP.Framework.Provisioning.Model.ListInstance()
+            {
+                Title = "Project Documents",
+                Url = "/Lists/ProjectDocuments",
+                TemplateType = 101,
+                ContentTypesEnabled = true,
+            };
+
+            list.ContentTypeBindings.Add(new PnP.Framework.Provisioning.Model.ContentTypeBinding()
+            {
+                ContentTypeId = "0x01005D4F34E4BE7F4B6892AEBE088EDD215E",
+                Default = true,
+                DisplayFormClientSideComponentId = "49b0ccdd-1bdf-47ba-a92f-dfddec265d63",
+                DisplayFormClientSideComponentProperties = "{'sampleProperty':'Display form value'}",
+                NewFormClientSideComponentId = "7c7c9c44-4dd4-4a2b-8619-beba16e08efa",
+                NewFormClientSideComponentProperties = "{'sampleProperty':'New form value'}",
+                EditFormClientSideComponentId = "3c4825e4-4b20-496d-9450-cd76f5135323",
+                EditFormClientSideComponentProperties = "{'sampleProperty':'Edit form value'}",
+            });
+
+            result.Lists.Add(list);
+
+            var serializer = new TargetSerializer();
+            var testFileName = $"ProvisioningTemplate-2026-04-ListContentTypeBinding-{Guid.NewGuid():N}.xml";
+            var path = string.Empty;
+
+            try
+            {
+                provider.SaveAs(result, testFileName, serializer);
+
+                path = $"{provider.Connector.Parameters["ConnectionString"]}\\{provider.Connector.Parameters["Container"]}\\{testFileName}";
+                Assert.IsTrue(File.Exists(path));
+                path = Path.GetFullPath(path);
+
+                var xml = XDocument.Load(path);
+                var wrappedResult = XMLSerializer.Deserialize<TargetProvisioning>(xml);
+                var template = wrappedResult.Templates[0].ProvisioningTemplate.First();
+
+                var serializedList = template.Lists.FirstOrDefault(ls => ls.Title == "Project Documents");
+                Assert.IsNotNull(serializedList);
+
+                var ct = serializedList.ContentTypeBindings.FirstOrDefault(c => c.ContentTypeID == "0x01005D4F34E4BE7F4B6892AEBE088EDD215E");
+                Assert.IsNotNull(ct);
+                Assert.AreEqual("49b0ccdd-1bdf-47ba-a92f-dfddec265d63", ct.DisplayFormClientSideComponentId);
+                Assert.AreEqual("{'sampleProperty':'Display form value'}", ct.DisplayFormClientSideComponentProperties);
+                Assert.AreEqual("7c7c9c44-4dd4-4a2b-8619-beba16e08efa", ct.NewFormClientSideComponentId);
+                Assert.AreEqual("{'sampleProperty':'New form value'}", ct.NewFormClientSideComponentProperties);
+                Assert.AreEqual("3c4825e4-4b20-496d-9450-cd76f5135323", ct.EditFormClientSideComponentId);
+                Assert.AreEqual("{'sampleProperty':'Edit form value'}", ct.EditFormClientSideComponentProperties);
+            }
+            finally
+            {
+                if (!string.IsNullOrEmpty(path) && File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(TEST_CATEGORY)]
+        public void XMLSerializer_Serialize_ListInstances_ContentTypeBindingFieldRefs()
+        {
+            var provider = new XMLFileSystemTemplateProvider($@"{AppDomain.CurrentDomain.BaseDirectory}\..\..\..\Resources", "Templates");
+
+            var result = new ProvisioningTemplate();
+            var list = new PnP.Framework.Provisioning.Model.ListInstance()
+            {
+                Title = "Project Documents",
+                Url = "/Lists/ProjectDocuments",
+                TemplateType = 101,
+                ContentTypesEnabled = true,
+            };
+
+            var contentTypeBinding = new PnP.Framework.Provisioning.Model.ContentTypeBinding()
+            {
+                ContentTypeId = "0x01005D4F34E4BE7F4B6892AEBE088EDD215E",
+                Default = true,
+            };
+
+            contentTypeBinding.FieldRefs.Add(new FieldRef("ProjectID")
+            {
+                Id = new Guid("23203E97-3BFE-40CB-AFB4-07AA2B86BF45"),
+                Required = true,
+                Hidden = false,
+                UpdateChildren = true,
+            });
+            contentTypeBinding.FieldRefs.Add(new FieldRef("ProjectName")
+            {
+                Id = new Guid("B01B3DBC-4630-4ED1-B5BA-321BC7841E3D"),
+                Required = false,
+                Hidden = true,
+                UpdateChildren = false,
+            });
+
+            list.ContentTypeBindings.Add(contentTypeBinding);
+            result.Lists.Add(list);
+
+            var serializer = new TargetSerializer();
+            var testFileName = $"ProvisioningTemplate-2026-04-ListContentTypeBindingFieldRefs-{Guid.NewGuid():N}.xml";
+            var path = string.Empty;
+
+            try
+            {
+                provider.SaveAs(result, testFileName, serializer);
+
+                path = $"{provider.Connector.Parameters["ConnectionString"]}\\{provider.Connector.Parameters["Container"]}\\{testFileName}";
+                Assert.IsTrue(File.Exists(path));
+                path = Path.GetFullPath(path);
+
+                var xml = XDocument.Load(path);
+                var wrappedResult = XMLSerializer.Deserialize<TargetProvisioning>(xml);
+                var template = wrappedResult.Templates[0].ProvisioningTemplate.First();
+
+                var serializedList = template.Lists.FirstOrDefault(ls => ls.Title == "Project Documents");
+                Assert.IsNotNull(serializedList);
+
+                var ct = serializedList.ContentTypeBindings.FirstOrDefault(c => c.ContentTypeID == "0x01005D4F34E4BE7F4B6892AEBE088EDD215E");
+                Assert.IsNotNull(ct);
+                Assert.IsNotNull(ct.FieldRefs);
+                Assert.AreEqual(2, ct.FieldRefs.Length);
+
+                var field = ct.FieldRefs.FirstOrDefault(f => f.Name == "ProjectID");
+                Assert.IsNotNull(field);
+                Assert.AreEqual("23203e97-3bfe-40cb-afb4-07aa2b86bf45", field.ID);
+                Assert.IsTrue(field.Required);
+                Assert.IsFalse(field.Hidden);
+                Assert.IsTrue(field.UpdateChildren);
+                Assert.IsTrue(field.UpdateChildrenSpecified);
+
+                field = ct.FieldRefs.FirstOrDefault(f => f.Name == "ProjectName");
+                Assert.IsNotNull(field);
+                Assert.AreEqual("b01b3dbc-4630-4ed1-b5ba-321bc7841e3d", field.ID);
+                Assert.IsFalse(field.Required);
+                Assert.IsTrue(field.Hidden);
+                Assert.IsFalse(field.UpdateChildren);
+                Assert.IsTrue(field.UpdateChildrenSpecified);
+            }
+            finally
+            {
+                if (!string.IsNullOrEmpty(path) && File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+            }
         }
 
         [TestMethod]

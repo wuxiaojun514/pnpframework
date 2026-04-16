@@ -307,6 +307,96 @@ namespace PnP.Framework.Test.Framework.ObjectHandlers
         }
 
         [TestMethod]
+        public void CanApplyListInstanceWithListContentTypeFieldRefSettings()
+        {
+            var contentTypeName = $"Sequential Approval";
+            var listUrl = $"Lists/Test Flow History";
+
+            using (var ctx = TestCommon.CreateClientContext())
+            {
+                void CleanupAppliedListInstanceTemplateArtifacts()
+                {
+                    var list = ctx.Web.GetListByUrl(listUrl);
+                    if (list != null)
+                    {
+                        list.DeleteObject();
+                        ctx.ExecuteQueryRetry();
+                    }
+
+                    var webContentTypes = ctx.LoadQuery(ctx.Web.ContentTypes.Where(ct => ct.Name == contentTypeName));
+                    ctx.ExecuteQueryRetry();
+                    var createdContentType = webContentTypes.FirstOrDefault();
+                    if (createdContentType != null)
+                    {
+                        createdContentType.DeleteObject();
+                        ctx.ExecuteQueryRetry();
+                    }
+
+                    var fieldIds = new[]
+                    {
+                        new Guid("50e30439-74bf-47f9-8b6a-eb5adf43f7ed"),
+                        new Guid("186ded6c-06bf-4b6f-bec3-5b1c1ea3f376"),
+                        new Guid("813a56bf-4a89-4b7b-9fcb-2bb5a89eec56"),
+                        new Guid("61b240e9-4544-4a7b-b86b-d5f1c6c5f772"),
+                    };
+
+                    ctx.Load(ctx.Web.Fields, fs => fs.Include(f => f.Id));
+                    ctx.ExecuteQueryRetry();
+                    var fields = ctx.Web.Fields.Where(f => fieldIds.Contains(f.Id)).ToList();
+                    if (fields.Any())
+                    {
+                        foreach (var field in fields)
+                        {
+                            field.DeleteObject();
+                        }
+                        ctx.ExecuteQueryRetry();
+                    }
+                }
+
+                var provider = new XMLFileSystemTemplateProvider(
+                    String.Format(@"{0}\..\..\..\Resources", AppDomain.CurrentDomain.BaseDirectory),
+                    "Templates");
+
+                var template = provider.GetTemplate(
+                    "ProvisioningTemplate-2026-04-Sample-01-test.xml",
+                    new PnP.Framework.Provisioning.Providers.Xml.XMLPnPSchemaV202604Serializer());
+                template.Connector = provider.Connector;
+
+
+                var applyingInformation = new ProvisioningTemplateApplyingInformation
+                {
+                    HandlersToProcess = Handlers.Fields | Handlers.ContentTypes | Handlers.Lists
+                };
+
+                try
+                {
+                    ctx.Web.ApplyProvisioningTemplate(template, applyingInformation);
+
+                    var list = ctx.Web.GetListByUrl(listUrl);
+                    var contentTypes = list.EnsureProperty(l => l.ContentTypes);
+                    var myct = contentTypes.FirstOrDefault(ct => ct.Name == contentTypeName);
+
+                    Assert.IsNotNull(myct);
+
+                    ctx.Load(myct, ct => ct.FieldLinks.Include(fl => fl.Id, fl => fl.Required));
+                    ctx.Load(list.Fields, fs => fs.Include(f => f.Id, f => f.Title));
+                    ctx.ExecuteQueryRetry();
+
+                    var taskDueDateField = list.Fields.FirstOrDefault(f => f.Title == "Task Due Date");
+                    Assert.IsNotNull(taskDueDateField);
+
+                    var taskDueDateFieldLink = myct.FieldLinks.FirstOrDefault(fl => fl.Id == taskDueDateField.Id);
+                    Assert.IsNotNull(taskDueDateFieldLink);
+                    Assert.IsTrue(taskDueDateFieldLink.Required);
+                }
+                finally
+                {
+                    CleanupAppliedListInstanceTemplateArtifacts();
+                }
+            }
+        }
+
+        [TestMethod]
         public void FolderContentTypeShouldNotBeRemovedFromProvisionedDocumentLibraries()
         {
             using (var ctx = TestCommon.CreateClientContext())

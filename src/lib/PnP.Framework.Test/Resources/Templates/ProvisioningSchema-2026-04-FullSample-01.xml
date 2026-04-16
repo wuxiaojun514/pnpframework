@@ -582,7 +582,21 @@
             <pnp:DefaultColumnValue Key="Field2" Value="Custom Value 2" />
           </pnp:DefaultColumnValues>
           <pnp:ContentTypeBindings>
-            <pnp:ContentTypeBinding ContentTypeID="0x01005D4F34E4BE7F4B6892AEBE088EDD215E" Default="true"/>
+            <pnp:ContentTypeBinding ContentTypeID="0x01005D4F34E4BE7F4B6892AEBE088EDD215E"
+                                    Default="true"
+                                    DisplayFormClientSideComponentId="49b0ccdd-1bdf-47ba-a92f-dfddec265d63"
+                                    DisplayFormClientSideComponentProperties="{'sampleProperty':'Display form value'}"
+                                    NewFormClientSideComponentId="7c7c9c44-4dd4-4a2b-8619-beba16e08efa"
+                                    NewFormClientSideComponentProperties="{'sampleProperty':'New form value'}"
+                                    EditFormClientSideComponentId="3c4825e4-4b20-496d-9450-cd76f5135323"
+                                    EditFormClientSideComponentProperties="{'sampleProperty':'Edit form value'}">
+              <pnp:FieldRefs>
+                <pnp:FieldRef ID="{23203E97-3BFE-40CB-AFB4-07AA2B86BF45}" Name="ProjectID" Required="true" Hidden="false" UpdateChildren="false" />
+                <pnp:FieldRef ID="{B01B3DBC-4630-4ED1-B5BA-321BC7841E3D}" Name="ProjectName" Required="false" Hidden="true" UpdateChildren="false" />
+                <pnp:FieldRef ID="{A5DE9600-B7A6-42DD-A05E-10D4F1500208}" Name="ProjectManager" Required="false" Hidden="false" UpdateChildren="false" />
+                <pnp:FieldRef ID="{F1A1715E-6C52-40DE-8403-E9AAFD0470D0}" Name="ProjectDescription" Required="false" Hidden="false" UpdateChildren="false" />
+              </pnp:FieldRefs>
+            </pnp:ContentTypeBinding>
             <pnp:ContentTypeBinding ContentTypeID="0x0120" Remove="true"/>
           </pnp:ContentTypeBindings>
           <pnp:DataRows KeyColumn="ProjectID" UpdateBehavior="Overwrite">

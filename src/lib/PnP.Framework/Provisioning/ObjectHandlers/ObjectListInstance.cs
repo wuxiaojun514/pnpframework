@@ -1839,16 +1839,6 @@ namespace PnP.Framework.Provisioning.ObjectHandlers
 
             }
 
-            if (!string.IsNullOrEmpty(contentTypeBinding.DocumentTemplate))
-            {
-                var parsedDocumentTemplate = parser.ParseString(contentTypeBinding.DocumentTemplate);
-                if (!string.IsNullOrEmpty(parsedDocumentTemplate) && !string.Equals(listContentType.DocumentTemplate, parsedDocumentTemplate, StringComparison.OrdinalIgnoreCase))
-                {
-                    listContentType.DocumentTemplate = parsedDocumentTemplate;
-                    isDirty = true;
-                }
-            }
-
             isDirty |= SetContentTypeBindingFormCustomizerSettings(contentTypeBinding, parser, listContentType);
 
             if (isDirty)
@@ -2897,7 +2887,6 @@ namespace PnP.Framework.Provisioning.ObjectHandlers
                     ContentTypeId = ct.StringId,
                     Default = count == 0,
                     Hidden = ctypeHidden,
-                    DocumentTemplate = ct.DocumentTemplate,
                     DisplayFormClientSideComponentId = ct.DisplayFormClientSideComponentId,
                     DisplayFormClientSideComponentProperties = ct.DisplayFormClientSideComponentProperties,
                     NewFormClientSideComponentId = ct.NewFormClientSideComponentId,
@@ -2941,7 +2930,8 @@ namespace PnP.Framework.Provisioning.ObjectHandlers
                     {
                         Id = fieldLink.Id,
                         Required = fieldLink.Required,
-                        Hidden = fieldLink.Hidden
+                        Hidden = fieldLink.Hidden,
+                        UpdateChildren = false
                     });
 
                     if (!fieldLink.Hidden)

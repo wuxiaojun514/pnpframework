@@ -58,11 +58,6 @@ namespace PnP.Framework.Provisioning.Model
         }
 
         /// <summary>
-        /// Specifies the document template for the content type
-        /// </summary>
-        public string DocumentTemplate { get; set; }
-
-        /// <summary>
         /// Declares the ID of the SPFx Client Side Component to customize the Display Form of the Content Type.
         /// </summary>
         public string DisplayFormClientSideComponentId { get; set; }
@@ -102,13 +97,12 @@ namespace PnP.Framework.Provisioning.Model
         /// <returns>Returns HashCode</returns>
         public override int GetHashCode()
         {
-            return (String.Format("{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}",
+            return (String.Format("{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}",
                 (this.ContentTypeId != null ? this.ContentTypeId.GetHashCode() : 0),
                 this.Default.GetHashCode(),
                 this.Remove.GetHashCode(),
                 this.Hidden.GetHashCode(),
                 (this.FieldRefs != null ? this.FieldRefs.Aggregate(0, (acc, next) => acc + (next != null ? next.GetHashCode() : 0)) : 0),
-                (this.DocumentTemplate != null ? this.DocumentTemplate.GetHashCode() : 0),
                 (this.DisplayFormClientSideComponentId != null ? this.DisplayFormClientSideComponentId.GetHashCode() : 0),
                 (this.DisplayFormClientSideComponentProperties != null ? this.DisplayFormClientSideComponentProperties.GetHashCode() : 0),
                 (this.NewFormClientSideComponentId != null ? this.NewFormClientSideComponentId.GetHashCode() : 0),
