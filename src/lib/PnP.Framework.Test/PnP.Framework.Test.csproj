@@ -13,7 +13,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Remove="App.config" />
 		<None Remove="Resources\alm.sppkg" />
 		<None Remove="Resources\almskip.sppkg" />
 		<None Remove="Resources\custom.spcolor" />
@@ -80,9 +79,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Include="App.config">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
 		<Content Include="Resources\alm.sppkg">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>

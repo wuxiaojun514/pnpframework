@@ -8263,8 +8263,6 @@ namespace PnP.Framework.Provisioning.Providers.Xml.V202604 {
         
         private bool hiddenField;
         
-        private string documentTemplateField;
-        
         private string displayFormClientSideComponentIdField;
         
         private string displayFormClientSideComponentPropertiesField;
@@ -8338,17 +8336,6 @@ namespace PnP.Framework.Provisioning.Providers.Xml.V202604 {
             }
             set {
                 this.hiddenField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string DocumentTemplate {
-            get {
-                return this.documentTemplateField;
-            }
-            set {
-                this.documentTemplateField = value;
             }
         }
         
@@ -8623,272 +8610,6 @@ namespace PnP.Framework.Provisioning.Providers.Xml.V202604 {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema")]
-    public partial class DocumentSetTemplate {
-        
-        private DocumentSetTemplateAllowedContentTypes allowedContentTypesField;
-        
-        private DocumentSetTemplateDefaultDocument[] defaultDocumentsField;
-        
-        private DocumentSetFieldRef[] sharedFieldsField;
-        
-        private DocumentSetFieldRef[] welcomePageFieldsField;
-        
-        private DocumentSetTemplateXmlDocuments xmlDocumentsField;
-        
-        private string welcomePageField;
-        
-        private bool updateChildrenField;
-        
-        public DocumentSetTemplate() {
-            this.updateChildrenField = true;
-        }
-        
-        /// <remarks/>
-        public DocumentSetTemplateAllowedContentTypes AllowedContentTypes {
-            get {
-                return this.allowedContentTypesField;
-            }
-            set {
-                this.allowedContentTypesField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayItemAttribute("DefaultDocument", IsNullable=false)]
-        public DocumentSetTemplateDefaultDocument[] DefaultDocuments {
-            get {
-                return this.defaultDocumentsField;
-            }
-            set {
-                this.defaultDocumentsField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayItemAttribute("SharedField", IsNullable=false)]
-        public DocumentSetFieldRef[] SharedFields {
-            get {
-                return this.sharedFieldsField;
-            }
-            set {
-                this.sharedFieldsField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayItemAttribute("WelcomePageField", IsNullable=false)]
-        public DocumentSetFieldRef[] WelcomePageFields {
-            get {
-                return this.welcomePageFieldsField;
-            }
-            set {
-                this.welcomePageFieldsField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public DocumentSetTemplateXmlDocuments XmlDocuments {
-            get {
-                return this.xmlDocumentsField;
-            }
-            set {
-                this.xmlDocumentsField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string WelcomePage {
-            get {
-                return this.welcomePageField;
-            }
-            set {
-                this.welcomePageField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(true)]
-        public bool UpdateChildren {
-            get {
-                return this.updateChildrenField;
-            }
-            set {
-                this.updateChildrenField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema")]
-    public partial class DocumentSetTemplateAllowedContentTypes {
-        
-        private DocumentSetTemplateAllowedContentTypesAllowedContentType[] allowedContentTypeField;
-        
-        private bool removeExistingContentTypesField;
-        
-        public DocumentSetTemplateAllowedContentTypes() {
-            this.removeExistingContentTypesField = false;
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("AllowedContentType")]
-        public DocumentSetTemplateAllowedContentTypesAllowedContentType[] AllowedContentType {
-            get {
-                return this.allowedContentTypeField;
-            }
-            set {
-                this.allowedContentTypeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(false)]
-        public bool RemoveExistingContentTypes {
-            get {
-                return this.removeExistingContentTypesField;
-            }
-            set {
-                this.removeExistingContentTypesField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema")]
-    public partial class DocumentSetTemplateAllowedContentTypesAllowedContentType {
-        
-        private string contentTypeIDField;
-        
-        private string nameField;
-        
-        private bool removeField;
-        
-        public DocumentSetTemplateAllowedContentTypesAllowedContentType() {
-            this.removeField = false;
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string ContentTypeID {
-            get {
-                return this.contentTypeIDField;
-            }
-            set {
-                this.contentTypeIDField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Name {
-            get {
-                return this.nameField;
-            }
-            set {
-                this.nameField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(false)]
-        public bool Remove {
-            get {
-                return this.removeField;
-            }
-            set {
-                this.removeField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema")]
-    public partial class DocumentSetTemplateDefaultDocument {
-        
-        private string nameField;
-        
-        private string contentTypeIDField;
-        
-        private string fileSourcePathField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Name {
-            get {
-                return this.nameField;
-            }
-            set {
-                this.nameField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string ContentTypeID {
-            get {
-                return this.contentTypeIDField;
-            }
-            set {
-                this.contentTypeIDField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string FileSourcePath {
-            get {
-                return this.fileSourcePathField;
-            }
-            set {
-                this.fileSourcePathField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema")]
-    public partial class DocumentSetTemplateXmlDocuments {
-        
-        private System.Xml.XmlElement[] anyField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAnyElementAttribute()]
-        public System.Xml.XmlElement[] Any {
-            get {
-                return this.anyField;
-            }
-            set {
-                this.anyField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema")]
     public partial class ListInstance {
         
         private StringDictionaryItem[] defaultColumnValuesField;
@@ -8896,8 +8617,6 @@ namespace PnP.Framework.Provisioning.Providers.Xml.V202604 {
         private PropertyBagEntry[] propertyBagEntriesField;
         
         private ContentTypeBinding[] contentTypeBindingsField;
-        
-        private ContentType[] contentTypesField;
         
         private ListInstanceViews viewsField;
         
@@ -9055,17 +8774,6 @@ namespace PnP.Framework.Provisioning.Providers.Xml.V202604 {
             }
             set {
                 this.contentTypeBindingsField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
-        public ContentType[] ContentTypes {
-            get {
-                return this.contentTypesField;
-            }
-            set {
-                this.contentTypesField = value;
             }
         }
         
@@ -9670,6 +9378,545 @@ namespace PnP.Framework.Provisioning.Providers.Xml.V202604 {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema")]
+    public partial class ListInstanceViews {
+        
+        private System.Xml.XmlElement[] anyField;
+        
+        private bool removeExistingViewsField;
+        
+        public ListInstanceViews() {
+            this.removeExistingViewsField = false;
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAnyElementAttribute()]
+        public System.Xml.XmlElement[] Any {
+            get {
+                return this.anyField;
+            }
+            set {
+                this.anyField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool RemoveExistingViews {
+            get {
+                return this.removeExistingViewsField;
+            }
+            set {
+                this.removeExistingViewsField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema")]
+    public partial class ListInstanceFields {
+        
+        private System.Xml.XmlElement[] anyField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAnyElementAttribute()]
+        public System.Xml.XmlElement[] Any {
+            get {
+                return this.anyField;
+            }
+            set {
+                this.anyField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema")]
+    public partial class ListInstanceDataRows {
+        
+        private ListInstanceDataRowsDataRow[] dataRowField;
+        
+        private string keyColumnField;
+        
+        private ListInstanceDataRowsUpdateBehavior updateBehaviorField;
+        
+        public ListInstanceDataRows() {
+            this.updateBehaviorField = ListInstanceDataRowsUpdateBehavior.Skip;
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("DataRow")]
+        public ListInstanceDataRowsDataRow[] DataRow {
+            get {
+                return this.dataRowField;
+            }
+            set {
+                this.dataRowField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string KeyColumn {
+            get {
+                return this.keyColumnField;
+            }
+            set {
+                this.keyColumnField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(ListInstanceDataRowsUpdateBehavior.Skip)]
+        public ListInstanceDataRowsUpdateBehavior UpdateBehavior {
+            get {
+                return this.updateBehaviorField;
+            }
+            set {
+                this.updateBehaviorField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema")]
+    public partial class ListInstanceDataRowsDataRow {
+        
+        private DataValue[] dataValueField;
+        
+        private ObjectSecurity securityField;
+        
+        private ListInstanceDataRowsDataRowAttachment[] attachmentsField;
+        
+        private string keyField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("DataValue")]
+        public DataValue[] DataValue {
+            get {
+                return this.dataValueField;
+            }
+            set {
+                this.dataValueField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public ObjectSecurity Security {
+            get {
+                return this.securityField;
+            }
+            set {
+                this.securityField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayItemAttribute("Attachment", IsNullable=false)]
+        public ListInstanceDataRowsDataRowAttachment[] Attachments {
+            get {
+                return this.attachmentsField;
+            }
+            set {
+                this.attachmentsField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Key {
+            get {
+                return this.keyField;
+            }
+            set {
+                this.keyField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema")]
+    public partial class ListInstanceDataRowsDataRowAttachment {
+        
+        private string nameField;
+        
+        private string srcField;
+        
+        private bool overwriteField;
+        
+        public ListInstanceDataRowsDataRowAttachment() {
+            this.overwriteField = false;
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Name {
+            get {
+                return this.nameField;
+            }
+            set {
+                this.nameField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Src {
+            get {
+                return this.srcField;
+            }
+            set {
+                this.srcField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool Overwrite {
+            get {
+                return this.overwriteField;
+            }
+            set {
+                this.overwriteField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
+    [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema")]
+    public enum ListInstanceDataRowsUpdateBehavior {
+        
+        /// <remarks/>
+        Overwrite,
+        
+        /// <remarks/>
+        Skip,
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
+    [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema")]
+    public enum ListInstanceListExperience {
+        
+        /// <remarks/>
+        Auto,
+        
+        /// <remarks/>
+        ClassicExperience,
+        
+        /// <remarks/>
+        NewExperience,
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
+    [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema")]
+    public enum ListInstanceDirection {
+        
+        /// <remarks/>
+        NONE,
+        
+        /// <remarks/>
+        LTR,
+        
+        /// <remarks/>
+        RTL,
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema")]
+    public partial class DocumentSetTemplate {
+        
+        private DocumentSetTemplateAllowedContentTypes allowedContentTypesField;
+        
+        private DocumentSetTemplateDefaultDocument[] defaultDocumentsField;
+        
+        private DocumentSetFieldRef[] sharedFieldsField;
+        
+        private DocumentSetFieldRef[] welcomePageFieldsField;
+        
+        private DocumentSetTemplateXmlDocuments xmlDocumentsField;
+        
+        private string welcomePageField;
+        
+        private bool updateChildrenField;
+        
+        public DocumentSetTemplate() {
+            this.updateChildrenField = true;
+        }
+        
+        /// <remarks/>
+        public DocumentSetTemplateAllowedContentTypes AllowedContentTypes {
+            get {
+                return this.allowedContentTypesField;
+            }
+            set {
+                this.allowedContentTypesField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayItemAttribute("DefaultDocument", IsNullable=false)]
+        public DocumentSetTemplateDefaultDocument[] DefaultDocuments {
+            get {
+                return this.defaultDocumentsField;
+            }
+            set {
+                this.defaultDocumentsField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayItemAttribute("SharedField", IsNullable=false)]
+        public DocumentSetFieldRef[] SharedFields {
+            get {
+                return this.sharedFieldsField;
+            }
+            set {
+                this.sharedFieldsField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayItemAttribute("WelcomePageField", IsNullable=false)]
+        public DocumentSetFieldRef[] WelcomePageFields {
+            get {
+                return this.welcomePageFieldsField;
+            }
+            set {
+                this.welcomePageFieldsField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public DocumentSetTemplateXmlDocuments XmlDocuments {
+            get {
+                return this.xmlDocumentsField;
+            }
+            set {
+                this.xmlDocumentsField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string WelcomePage {
+            get {
+                return this.welcomePageField;
+            }
+            set {
+                this.welcomePageField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(true)]
+        public bool UpdateChildren {
+            get {
+                return this.updateChildrenField;
+            }
+            set {
+                this.updateChildrenField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema")]
+    public partial class DocumentSetTemplateAllowedContentTypes {
+        
+        private DocumentSetTemplateAllowedContentTypesAllowedContentType[] allowedContentTypeField;
+        
+        private bool removeExistingContentTypesField;
+        
+        public DocumentSetTemplateAllowedContentTypes() {
+            this.removeExistingContentTypesField = false;
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("AllowedContentType")]
+        public DocumentSetTemplateAllowedContentTypesAllowedContentType[] AllowedContentType {
+            get {
+                return this.allowedContentTypeField;
+            }
+            set {
+                this.allowedContentTypeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool RemoveExistingContentTypes {
+            get {
+                return this.removeExistingContentTypesField;
+            }
+            set {
+                this.removeExistingContentTypesField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema")]
+    public partial class DocumentSetTemplateAllowedContentTypesAllowedContentType {
+        
+        private string contentTypeIDField;
+        
+        private string nameField;
+        
+        private bool removeField;
+        
+        public DocumentSetTemplateAllowedContentTypesAllowedContentType() {
+            this.removeField = false;
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string ContentTypeID {
+            get {
+                return this.contentTypeIDField;
+            }
+            set {
+                this.contentTypeIDField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Name {
+            get {
+                return this.nameField;
+            }
+            set {
+                this.nameField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool Remove {
+            get {
+                return this.removeField;
+            }
+            set {
+                this.removeField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema")]
+    public partial class DocumentSetTemplateDefaultDocument {
+        
+        private string nameField;
+        
+        private string contentTypeIDField;
+        
+        private string fileSourcePathField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Name {
+            get {
+                return this.nameField;
+            }
+            set {
+                this.nameField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string ContentTypeID {
+            get {
+                return this.contentTypeIDField;
+            }
+            set {
+                this.contentTypeIDField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string FileSourcePath {
+            get {
+                return this.fileSourcePathField;
+            }
+            set {
+                this.fileSourcePathField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema")]
+    public partial class DocumentSetTemplateXmlDocuments {
+        
+        private System.Xml.XmlElement[] anyField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAnyElementAttribute()]
+        public System.Xml.XmlElement[] Any {
+            get {
+                return this.anyField;
+            }
+            set {
+                this.anyField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema")]
     public partial class ContentType {
         
@@ -9991,279 +10238,6 @@ namespace PnP.Framework.Provisioning.Providers.Xml.V202604 {
                 this.targetNameField = value;
             }
         }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema")]
-    public partial class ListInstanceViews {
-        
-        private System.Xml.XmlElement[] anyField;
-        
-        private bool removeExistingViewsField;
-        
-        public ListInstanceViews() {
-            this.removeExistingViewsField = false;
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAnyElementAttribute()]
-        public System.Xml.XmlElement[] Any {
-            get {
-                return this.anyField;
-            }
-            set {
-                this.anyField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(false)]
-        public bool RemoveExistingViews {
-            get {
-                return this.removeExistingViewsField;
-            }
-            set {
-                this.removeExistingViewsField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema")]
-    public partial class ListInstanceFields {
-        
-        private System.Xml.XmlElement[] anyField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAnyElementAttribute()]
-        public System.Xml.XmlElement[] Any {
-            get {
-                return this.anyField;
-            }
-            set {
-                this.anyField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema")]
-    public partial class ListInstanceDataRows {
-        
-        private ListInstanceDataRowsDataRow[] dataRowField;
-        
-        private string keyColumnField;
-        
-        private ListInstanceDataRowsUpdateBehavior updateBehaviorField;
-        
-        public ListInstanceDataRows() {
-            this.updateBehaviorField = ListInstanceDataRowsUpdateBehavior.Skip;
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("DataRow")]
-        public ListInstanceDataRowsDataRow[] DataRow {
-            get {
-                return this.dataRowField;
-            }
-            set {
-                this.dataRowField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string KeyColumn {
-            get {
-                return this.keyColumnField;
-            }
-            set {
-                this.keyColumnField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(ListInstanceDataRowsUpdateBehavior.Skip)]
-        public ListInstanceDataRowsUpdateBehavior UpdateBehavior {
-            get {
-                return this.updateBehaviorField;
-            }
-            set {
-                this.updateBehaviorField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema")]
-    public partial class ListInstanceDataRowsDataRow {
-        
-        private DataValue[] dataValueField;
-        
-        private ObjectSecurity securityField;
-        
-        private ListInstanceDataRowsDataRowAttachment[] attachmentsField;
-        
-        private string keyField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("DataValue")]
-        public DataValue[] DataValue {
-            get {
-                return this.dataValueField;
-            }
-            set {
-                this.dataValueField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public ObjectSecurity Security {
-            get {
-                return this.securityField;
-            }
-            set {
-                this.securityField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayItemAttribute("Attachment", IsNullable=false)]
-        public ListInstanceDataRowsDataRowAttachment[] Attachments {
-            get {
-                return this.attachmentsField;
-            }
-            set {
-                this.attachmentsField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Key {
-            get {
-                return this.keyField;
-            }
-            set {
-                this.keyField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema")]
-    public partial class ListInstanceDataRowsDataRowAttachment {
-        
-        private string nameField;
-        
-        private string srcField;
-        
-        private bool overwriteField;
-        
-        public ListInstanceDataRowsDataRowAttachment() {
-            this.overwriteField = false;
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Name {
-            get {
-                return this.nameField;
-            }
-            set {
-                this.nameField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Src {
-            get {
-                return this.srcField;
-            }
-            set {
-                this.srcField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(false)]
-        public bool Overwrite {
-            get {
-                return this.overwriteField;
-            }
-            set {
-                this.overwriteField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema")]
-    public enum ListInstanceDataRowsUpdateBehavior {
-        
-        /// <remarks/>
-        Overwrite,
-        
-        /// <remarks/>
-        Skip,
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema")]
-    public enum ListInstanceListExperience {
-        
-        /// <remarks/>
-        Auto,
-        
-        /// <remarks/>
-        ClassicExperience,
-        
-        /// <remarks/>
-        NewExperience,
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2026/04/ProvisioningSchema")]
-    public enum ListInstanceDirection {
-        
-        /// <remarks/>
-        NONE,
-        
-        /// <remarks/>
-        LTR,
-        
-        /// <remarks/>
-        RTL,
     }
     
     /// <remarks/>

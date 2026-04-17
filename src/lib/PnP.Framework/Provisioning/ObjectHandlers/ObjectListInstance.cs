@@ -1764,10 +1764,6 @@ namespace PnP.Framework.Provisioning.ObjectHandlers
             bool isDirty = false;
 
             web.Context.Load(listContentType,
-                ct => ct.DocumentTemplate,
-                ct => ct.DisplayFormUrl,
-                ct => ct.EditFormUrl,
-                ct => ct.NewFormUrl,
                 ct => ct.DisplayFormClientSideComponentId,
                 ct => ct.DisplayFormClientSideComponentProperties,
                 ct => ct.NewFormClientSideComponentId,
@@ -2184,7 +2180,7 @@ namespace PnP.Framework.Provisioning.ObjectHandlers
 
             if (createdList.BaseTemplate != (int)ListTemplateType.Survey)
             {
-                    ConfigureContentTypes(web, createdList, templateList, true, scope, parser);
+                ConfigureContentTypes(web, createdList, templateList, true, scope, parser);
             }
 
             // Add any custom action
@@ -2861,14 +2857,6 @@ namespace PnP.Framework.Provisioning.ObjectHandlers
                 web.Context.Load(ct, 
                     c => c.Parent,
                     c => c.Id,
-                    c => c.Name,
-                    c => c.Description,
-                    c => c.Group,
-                    c => c.Hidden,
-                    c => c.Sealed,
-                    c => c.ReadOnly,
-                    c => c.DocumentTemplate,
-                    c => c.SchemaXmlWithResourceTokens,
                     c => c.DisplayFormClientSideComponentId,
                     c => c.DisplayFormClientSideComponentProperties,
                     c => c.NewFormClientSideComponentId,

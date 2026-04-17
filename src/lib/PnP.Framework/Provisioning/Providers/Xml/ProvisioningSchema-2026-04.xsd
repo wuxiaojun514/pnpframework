@@ -3140,20 +3140,6 @@
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
-      <xsd:element name="ContentTypes" minOccurs="0">
-        <xsd:annotation>
-          <xsd:appinfo>Added with schema version 202604</xsd:appinfo>
-          <xsd:documentation xml:lang="en">
-            The list-scoped Content Types defined on the List Instance, optional collection of elements. These are content types that only exist within this specific list.
-          </xsd:documentation>
-        </xsd:annotation>
-        <xsd:complexType>
-          <xsd:sequence>
-            <xsd:element name="ContentType" type="pnp:ContentType"
-                         minOccurs="1" maxOccurs="unbounded" />
-          </xsd:sequence>
-        </xsd:complexType>
-      </xsd:element>
       <xsd:element name="Views" minOccurs="0">
         <xsd:annotation>
           <xsd:documentation xml:lang="en">
@@ -4177,8 +4163,8 @@
     <xsd:annotation>
       <xsd:appinfo>Added with schema version 202209</xsd:appinfo>
       <xsd:documentation xml:lang="en">
-        Common set of attributes for any Site Collection
-      </xsd:documentation>
+		Common set of client-side component attributes for ContentType
+	  </xsd:documentation>
     </xsd:annotation>
     <xsd:attribute name="DisplayFormClientSideComponentId" type="xsd:string" use="optional">
       <xsd:annotation>
@@ -4288,68 +4274,7 @@
       </xsd:annotation>
     </xsd:attribute>
 
-    <xsd:attribute name="DocumentTemplate" type="xsd:string" use="optional">
-      <xsd:annotation>
-        <xsd:appinfo>Added with schema version 202604</xsd:appinfo>
-        <xsd:documentation xml:lang="en">
-          Specifies the document template for the content type, optional attribute.
-        </xsd:documentation>
-      </xsd:annotation>
-    </xsd:attribute>
-
-    <xsd:attribute name="DisplayFormClientSideComponentId" type="xsd:string" use="optional">
-      <xsd:annotation>
-        <xsd:appinfo>Added with schema version 202604</xsd:appinfo>
-        <xsd:documentation xml:lang="en">
-          Declares the ID of the SPFx Client Side Component to customize the Display Form of the Content Type, optional attribute.
-        </xsd:documentation>
-      </xsd:annotation>
-    </xsd:attribute>
-
-    <xsd:attribute name="DisplayFormClientSideComponentProperties" type="xsd:string" use="optional">
-      <xsd:annotation>
-        <xsd:appinfo>Added with schema version 202604</xsd:appinfo>
-        <xsd:documentation xml:lang="en">
-          Defines the properties of the SPFx Client Side Component to customize the Display Form of the Content Type, optional attribute.
-        </xsd:documentation>
-      </xsd:annotation>
-    </xsd:attribute>
-
-    <xsd:attribute name="NewFormClientSideComponentId" type="xsd:string" use="optional">
-      <xsd:annotation>
-        <xsd:appinfo>Added with schema version 202604</xsd:appinfo>
-        <xsd:documentation xml:lang="en">
-          Declares the ID of the SPFx Client Side Component to customize the New Form of the Content Type, optional attribute.
-        </xsd:documentation>
-      </xsd:annotation>
-    </xsd:attribute>
-
-    <xsd:attribute name="NewFormClientSideComponentProperties" type="xsd:string" use="optional">
-      <xsd:annotation>
-        <xsd:appinfo>Added with schema version 202604</xsd:appinfo>
-        <xsd:documentation xml:lang="en">
-          Defines the properties of the SPFx Client Side Component to customize the New Form of the Content Type, optional attribute.
-        </xsd:documentation>
-      </xsd:annotation>
-    </xsd:attribute>
-
-    <xsd:attribute name="EditFormClientSideComponentId" type="xsd:string" use="optional">
-      <xsd:annotation>
-        <xsd:appinfo>Added with schema version 202604</xsd:appinfo>
-        <xsd:documentation xml:lang="en">
-          Declares the ID of the SPFx Client Side Component to customize the Edit Form of the Content Type, optional attribute.
-        </xsd:documentation>
-      </xsd:annotation>
-    </xsd:attribute>
-
-    <xsd:attribute name="EditFormClientSideComponentProperties" type="xsd:string" use="optional">
-      <xsd:annotation>
-        <xsd:appinfo>Added with schema version 202604</xsd:appinfo>
-        <xsd:documentation xml:lang="en">
-          Defines the properties of the SPFx Client Side Component to customize the Edit Form of the Content Type, optional attribute.
-        </xsd:documentation>
-      </xsd:annotation>
-    </xsd:attribute>
+	<xsd:attributeGroup ref="ContentTypeClientSideComponentAttributes" />
 
   </xsd:complexType>
 
